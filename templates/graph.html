@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Graph Visualization</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style type="text/css">
+    #graph-container {
+      height: 600px;
+    }
+  </style>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <input id="place1" type="text" class="form-control" placeholder="Place 1" value="places/Aberdeen"> 
+      </div>
+      <div class="col-md-6">
+        <input id="place2" type="text" class="form-control" placeholder="Place 2" value = "places/Edinburgh">
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <button id="findButton" class="btn btn-primary">Find</button>
+      </div>
+    </div>
+  </div>
+  <div id="graph-container"></div>
+    <script>
+        document.getElementById('findButton').addEventListener('click', function() {
+            var place1 = document.getElementById('place1').value;
+            var place2 = document.getElementById('place2').value;
+          
+            fetch('/Search?place1=' + encodeURIComponent(place1) + '&place2=' + encodeURIComponent(place2))
+              .then(response => response.json())
+              .then(data => {
+                // Process the data
+                console.log(data);
+                var nodes = data.map(document => ({
+                  id: document.vertex._id,
+                  label: document.vertex.label
+                }));
+          
+                var edges = data.map(document => {
+                 if(document.edge !== null)
+                 {
+                    return {                  
+                        from: document.edge._from,
+                        to: document.edge._to,
+                        label: document.edge.travelTime}
+                 }
+                });
+
+                edges = edges.filter(function (el) {
+                    return el != null;
+                  });
+
+                console.log(nodes, edges);
+          
+                // Create a network instance
+                var container = document.getElementById('graph-container');
+                var networkData = {
+                  nodes: nodes,
+                  edges: edges
+                };
+                var options = {
+                    edges: {
+                      arrows: {
+                        to: { enabled: true, scaleFactor: 0.5 } // Show arrows pointing to the 'to' node
+                      },
+                      labelHighlightBold: true, // Make the edge label bold on hover
+                      font: {
+                        size: 14, // Font size for the edge labels
+                        color: 'black', // Font color for the edge labels
+                        align: 'middle' // Text alignment for the edge labels
+                      }
+                    }
+                  };
+                var network = new vis.Network(container, networkData, options);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          });
+    </script>
+</body>
+
+</html>
