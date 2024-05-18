@@ -37,9 +37,6 @@ def Search():
     data = [document for document in cursor]
     return jsonify(data)
     # # Get the shortest path as a list of vertex keys
-    # for document in cursor:
-    #     vertex = document['vertex']
-    #     edge = document['edge']
 
 
 if __name__ == "__main__":
