@@ -6,7 +6,7 @@ app = Flask(__name__)
 client = ArangoClient(hosts=["https://YourArangoAppIp:Port"])
 
 # Login with username and password (replace with your credentials)
-db = client.db("databasename",username="user", password="password")
+db = client.db("databasename",username="root", password="password") #use the root password given at the deployment overview page
 
 
 @app.route('/', methods = ['GET'])
