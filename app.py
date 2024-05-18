@@ -23,7 +23,7 @@ def Search():
     query = """
             FOR vertex, edge
             IN OUTBOUND SHORTEST_PATH @place1 TO @place2
-            GRAPH 'myGraph'
+            GRAPH 'kShortestPathsGraph'
             OPTIONS {weightAttribute: 'travelTime'}
                 return {vertex, edge}
             """
